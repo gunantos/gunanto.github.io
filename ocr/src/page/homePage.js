@@ -47,7 +47,7 @@ const homePage = {
     <v-carousel-item style="height: 100%"
       v-for="(itm, i) in listGambar"
     ><center>
-    <v-img :src="'https://oleo-ocr.app-kita.net/' + itm" contain max-width="400" style="height: 100%"></v-img>
+    <v-img :src="itm" contain max-width="400" style="height: 100%"></v-img>
     </center>
     </v-carousel-item>
   </v-carousel>
