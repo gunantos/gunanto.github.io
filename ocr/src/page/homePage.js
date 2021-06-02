@@ -47,7 +47,7 @@ const homePage = {
     <v-carousel-item style="height: 100%"
       v-for="(itm, i) in listGambar"
     ><center>
-    <v-img :src="itm" contain max-width="400" style="height: 100%"></v-img>
+    <v-img :src="itm" :lazy-src="itm" contain max-width="400" style="height: 100%"></v-img>
     </center>
     </v-carousel-item>
   </v-carousel>
@@ -79,11 +79,11 @@ const homePage = {
         return 'red'
       }
     },
-    showGambar(item, length) {
+    showGambar(item, length) { console.log(item)
             if (length > 0) {
-                this.listGambar = item.data.file
+                this.listGambar = item.data.files
                 this.dialog = true
-            }
+      }
         },
         closeCorousel() {
             this.dialog = false
