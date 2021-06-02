@@ -348,7 +348,7 @@ const bodyCmp = {
         if (res.data.status) {
           this.document_setting = JSON.stringify(res.data.data, undefined, 2)
           this.dialogDocument = false
-          this.dialog = true
+          this.dialog = false
         } else {
           this.dialogResult = {
             value: true,
@@ -357,7 +357,7 @@ const bodyCmp = {
             color: '#F44336'
           }
           this.dialogDocument = false
-          this.dialog = true
+          this.dialog = false
         }
       });
     },
@@ -371,7 +371,7 @@ const bodyCmp = {
           this.document_setting = JSON.stringify(res.data.data, undefined, 2)
           this.loadConfig(true, false)
           this.dialogSetting = false
-          this.dialog = true
+          this.dialog = false
         } else {
           this.dialogResult = {
             value: true,
@@ -379,7 +379,7 @@ const bodyCmp = {
             message: res.data.message,
             color: '#F44336'
           }
-          this.dialog = true
+          this.dialog = false
           this.dialogSetting = false
         }
       });
