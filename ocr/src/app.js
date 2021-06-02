@@ -1,5 +1,6 @@
 "use strict";
-const homePage = () => import(BASE_URL+"/src/page/homePage.js");
+const homePage = () => import(BASE_URL + "/src/page/homePage.js");
+
 Vue.use(Vuex)
 Vue.use(VueRouter)
 const store = new Vuex.Store({

@@ -1,4 +1,4 @@
-
+const BASE_URL_API = 'https://oleo-ocr.app-kita.net/'
 const homePage = () => import(BASE_URL + "/src/page/homePage.js");
 const bodyCmp = {
   template: `    <v-app id="inspire">
@@ -307,20 +307,20 @@ const bodyCmp = {
     },
     settingListConfig() {
       const _json = localStorage.getItem('settingListConfig');
-      if (_json !== undefined && _json !== null) {
-        return JSON.parse(_json)
+      if (_json !== undefined && _json !== null && _json !== 'undefined' && _json == '') { 
+        return this.isJson(_json) ? JSON.parse(_json) : []
       } else {
         return []
       }
     }
   },
   mounted() {
-    if (this.settingIMG !== undefined && this.settingIMG !== null && this.settingIMG !== '') {
+    if (this.settingIMG !== undefined && this.settingIMG !== null && this.settingIMG !== '' && this.settingIMG !== 'undefined') {
       this.convert_img_setting = this.settingIMG;
     } else {
       this.loadConfig(true, false)
     }
-    if (this.settingListConfig !== undefined && this.settingListConfig !== null && this.settingListConfig !== '') {
+    if (this.settingListConfig !== undefined && this.settingListConfig !== null && this.settingListConfig !== '' && this.settingListConfig !== 'undefined') {
       this.listConfig = this.settingListConfig;
     } else {
       this.loadConfig(false, true)
@@ -330,13 +330,21 @@ const bodyCmp = {
     this.loadConfig(true, true)
   },
   methods: {
+    isJson(str) {
+      try {
+        JSON.parse(str)
+      } catch (e) {
+        return false;
+      }
+      return true;
+    },
     saveDocumentRule() {
       this.dialog = true
       this.teksLoading = 'Save Configuration Rules Document ' + this.seletConfig
       var formData = new FormData();
       formData.append('filename', this.seletConfig);
       formData.append('json', this.document_setting);
-      axios.post('api/config', formData).then(res => {
+      axios.post(BASE_URL_API+'api/config', formData).then(res => {
         if (res.data.status) {
           this.document_setting = JSON.stringify(res.data.data, undefined, 2)
           this.dialogDocument = false
@@ -358,7 +366,7 @@ const bodyCmp = {
       this.teksLoading = 'Save Configuration Convert Image'
       var formData = new FormData();
       formData.append('json', this.convert_img_setting);
-      axios.post('api/config_convert', formData).then(res => {
+      axios.post(BASE_URL_API+'api/config_convert', formData).then(res => {
         if (res.data.status) {
           this.document_setting = JSON.stringify(res.data.data, undefined, 2)
           this.loadConfig(true, false)
@@ -378,7 +386,7 @@ const bodyCmp = {
     },
     getConfigFile(file) {
       this.seletConfig = file
-      axios.get('api/config?filename='+ file).then(res => {
+      axios.get(BASE_URL_API+'api/config?filename='+ file).then(res => {
         this.document_setting = JSON.stringify(res.data.data, undefined, 2)
         this.dialogDocument = true
         });
@@ -388,19 +396,23 @@ const bodyCmp = {
         
       this.dialog = true
       this.teksLoading = 'Load configuration file'
-        axios.get('api/config_convert').then(res => {
-          localStorage.setItem('settingIMG', JSON.stringify(res.data.data, undefined, 2))
-          this.convert_img_setting = this.settingIMG
-          this.dialog = false
+        axios.get(BASE_URL_API+'api/config_convert').then(res => {
+          if (res.data.data !== undefined) {
+            localStorage.setItem('settingIMG', JSON.stringify(res.data.data, undefined, 2))
+            this.convert_img_setting = this.settingIMG
+            this.dialog = false
+          }
         });
       }
       if (doc) {
         this.dialog = true
       this.teksLoading = 'Load configuration Rules Document'
-        axios.get('api/config_file').then(res => {
-          localStorage.setItem('settingListConfig', JSON.stringify(res.data.data, undefined, 2))
-          this.listConfig = this.settingDocument
-          this.dialog = false
+        axios.get(BASE_URL_API+'api/config_file').then(res => {
+          if (res.data.data !== undefined) {
+            localStorage.setItem('settingListConfig', JSON.stringify(res.data.data, undefined, 2))
+            this.listConfig = this.settingDocument
+            this.dialog = false
+          }
         });
       }
     },
@@ -425,7 +437,7 @@ const bodyCmp = {
       this.$store.commit('setLoading', true);
       var formData = new FormData();
        formData.append('files', this.files);
-      axios.post('api/upload', formData, {
+      axios.post(BASE_URL_API+'api/upload', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
@@ -461,7 +473,7 @@ const bodyCmp = {
        this.teksLoading = 'Convert PDF File to Image'
       var formData = new FormData();
        formData.append('files', file);
-      axios.post('api/convert_to_img', formData).then(res => {
+      axios.post(BASE_URL_API+'api/convert_to_img', formData).then(res => {
         const data = res.data
         if (data.status) {
           this.$store.commit('setResult_toImg', res.data.data)
@@ -499,7 +511,7 @@ const bodyCmp = {
           formData.append('files[]', file[i]);
       }
       this.teksLoading = 'Convert Image to Text and initialitation document'
-      axios.post('api/convert_to_text', formData).then(res => {
+      axios.post(BASE_URL_API+'api/convert_to_text', formData).then(res => {
         const data = res.data
         if (data.status) {
           this.$store.commit('setLoading', false);
@@ -543,7 +555,7 @@ const bodyCmp = {
       var formData = new FormData();
       formData.append('filename', this.logFiles);
       this.teksLoading = 'Callculate log file'
-      axios.post('api/calculate_again', formData).then(res => {
+      axios.post(BASE_URL_API+'api/calculate_again', formData).then(res => {
         const data = res.data
         if (data.status) {
           this.$store.commit('setLoading', false);
