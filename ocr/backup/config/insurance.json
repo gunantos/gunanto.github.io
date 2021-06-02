@@ -1,0 +1,28 @@
+{
+        "label": "Sertifikat Asuransi (Insurance)",
+        "formula": "",
+        "rules":[
+            {
+                "first": "",
+                "single": "",
+                "multi_or": [],
+                "multi_and": ["CERTIFICATE OF ANALYSIS", "PARAMETER", "METHODS"],
+                "formula": "[multi_and] > -1 ? true : false",
+                "options": {
+                    "lower": false,
+                    "replace": false,
+                    "space": true,
+                    "multi_or": {
+                        "lower": true,
+                        "replace": true,
+                        "space": true
+                    },
+                    "multi_and": {
+                        "lower": false,
+                        "replace": false,
+                        "space": false
+                    }
+                }
+            }
+        ]
+}

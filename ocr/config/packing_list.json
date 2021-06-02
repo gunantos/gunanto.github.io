@@ -1,0 +1,28 @@
+{
+        "label": "PACKING LIST",
+        "formula": "",
+        "rules":[
+            {
+                "first": "PACKING LIST",
+                "single": "",
+                "multi_or": [],
+                "multi_and": [],
+                "formula": "[first] > -1 ? true : false",
+                "options": {
+                    "lower": false,
+                    "replace": false,
+                    "space": true,
+                    "multi_or": {
+                        "lower": false,
+                        "replace": false,
+                        "space": false
+                    },
+                    "multi_and": {
+                        "lower": false,
+                        "replace": false,
+                        "space": false
+                    }
+                }
+            }
+        ]
+    }

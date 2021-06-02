@@ -55,6 +55,31 @@ const store = new Vuex.Store({
         },
         logfile(state) {
             return state.logfile
+        },
+        getCountPagePDF(state) {
+            const d = state.result.convert_text
+            if (typeof d == 'object' || typeof d == 'array') {
+                return d.length;
+            }
+            return 0
+        },
+        getCountPageDetect(state) {
+            const h = state.hasil
+            var ttl = 0
+            if (typeof h == 'array' || typeof h == 'object')
+            {
+                h.forEach(el => { 
+            console.log(el)
+                    if (el.data !== undefined) {
+                        if (el.data.page !== undefined) {
+                            if (typeof el.data.page == 'array' || typeof el.data.page == 'object') {
+                                ttl += el.data.page.length
+                            }
+                        }
+                    }
+                })
+            }
+            return ttl
         }
     }
 })

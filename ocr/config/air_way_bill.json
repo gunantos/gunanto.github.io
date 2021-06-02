@@ -1,0 +1,28 @@
+{
+        "label": "AIR WAY BILL",
+        "formula": "",
+        "rules":[
+            {
+                "first": "",
+                "single": "Air Way Bill",
+                "multi_or": [],
+                "multi_and": [],
+                "formula": "[single] > -1 ? true : false",
+                "options": {
+                    "lower": true,
+                    "replace": true,
+                    "space": true,
+                    "multi_or": {
+                        "lower": false,
+                        "replace": false,
+                        "space": false
+                    },
+                    "multi_and": {
+                        "lower": false,
+                        "replace": false,
+                        "space": false
+                    }
+                }
+            }
+        ]
+}

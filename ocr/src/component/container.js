@@ -18,7 +18,7 @@ const bodyCmp = {
           {{ link }}
         </v-btn>
   <v-spacer></v-spacer>
-  <v-responsive max-width="260">
+  <v-responsive v-if="$vuetify.breakpoint.md || $vuetify.breakpoint.lg || $vuetify.breakpoint.xl" max-width="260">
           <v-text-field
             dense
             flat
@@ -56,6 +56,10 @@ const bodyCmp = {
     @click="uploadFiles">
       <v-icon left dark>mdi-cloud-upload</v-icon> Upload
     </v-btn>
+    
+   <v-btn  style="margin-top: -18px; height: 55px" outlined v-if="logFiles !== null && logFiles !== ''" color="info" class="mb-2" @click="callculateAgain()">
+      <v-icon height='55px'>mdi-reload</v-icon>
+    </v-btn>
   </template>
     <template v-slot:selection="{ index, text }">
       <v-chip
@@ -76,16 +80,47 @@ const bodyCmp = {
       </span>
     </template>
   </v-file-input>
-   <v-btn v-if="logFiles !== null && logFiles !== ''" color="info" class="mb-2" @click="callculateAgain()">
-      Calculate
+  <v-card>
+    <v-toolbar color="orange lighten-2">
+      <v-chip label color="teal lighten-4"> <span v-if="!$vuetify.breakpoint.xs">Halaman PDF : </span>{{ ttlHalaman }}</v-chip>
+      <v-chip label class="ml-2" color="cyan lighten-4"><span v-if="!$vuetify.breakpoint.xs">Halaman Diditeksi: </span>{{ttlDitek}}</v-chip>
+      <v-spacer></v-spacer>
+<v-btn class="mr-2" @click="dialogSetting = true">
+      <v-icon >mdi-settings</v-icon>
     </v-btn>
+    
+<v-menu
+      :rounded="0"
+      offset-y
+    >
+<template v-slot:activator="{ attrs, on }">
+<v-btn  color="success" class="ml-2" v-bind="attrs" v-on="on">
+      <v-icon height='55px'>mdi-tune </v-icon>
+    </v-btn>
+      </template>
+<v-list>
+        <v-list-item
+          v-for="item in settingListConfig"
+          :key="item"
+          link
+          @click="getConfigFile(item)"
+        >
+          <v-list-item-title v-text="item"></v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
+
+
+    </v-toolbar>
          <v-sheet class="p-2"
-              min-height="70vh"
+              min-height="68vh"
               rounded="lg"
             >
              
                 <home-page></home-page>
             </v-sheet>
+    </v-card>
+
              <v-dialog
       v-model="dialog"
       hide-overlay
@@ -131,6 +166,81 @@ const bodyCmp = {
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+     <v-dialog
+      v-model="dialogSetting" 
+      max-width="690"
+    >
+      <v-card>
+        <v-card-title class="headline">
+         Covert Image Setting
+        </v-card-title>
+
+        <v-card-text>
+           <v-textarea
+      name="input-7-1"
+      filled
+      auto-grow
+      
+      hide-details
+      v-model="convert_img_setting"
+    ></v-textarea>
+        </v-card-text>
+
+        <v-card-actions>
+        <v-btn
+            color="primary"
+            @click="dialogSetting = false"
+          >
+            CANCEL
+          </v-btn>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="success"
+            @click="saveConfigImg()"
+          >
+            SAVE
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+       <v-dialog
+      v-model="dialogDocument"
+      max-width="690"
+    >
+      <v-card>
+        <v-card-title class="headline">
+         Document Rules <code>{{ seletConfig }}</code>
+        </v-card-title>
+
+        <v-card-text>
+           <v-textarea
+           v-model="document_setting"
+      filled
+      auto-grow
+      hide-details
+    ></v-textarea>
+        </v-card-text>
+
+        <v-card-actions>
+        <v-btn
+            color="primary"
+            @click="dialogDocument = false"
+          >
+            CANCEL
+          </v-btn>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="success"
+            @click="saveDocumentRule()"
+          >
+            SAVE
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
       </v-container>
     </v-main>
 </v-app>
@@ -152,16 +262,23 @@ const bodyCmp = {
         title: 'Error',
         message: '',
         color: '#F44336'
-      }
+      },
+      dialogSetting: false,
+      dialogDocument: false,
+      convert_img_setting: '',
+      document_setting: '',
+      listConfig: [],
+      seletConfig: ''
     }
   },
   computed: {
     files: {
       set: function (val) {
+        console.log(val);
         this.$store.commit('setFiles', val)
       },
       get: function () {
-        const fil = this.$store.getters.getFiles;
+        const fil = this.$store.getters.getFiles;console.log(fil);
         return (fil !== undefined && fil !== null && fil !== '' ? fil : [])
       }
     },
@@ -178,9 +295,115 @@ const bodyCmp = {
     },
     logFiles() {
       return this.$store.getters.logfile
+    },
+    ttlHalaman() {
+      return this.$store.getters.getCountPagePDF
+    },
+    ttlDitek() {
+       return this.$store.getters.getCountPageDetect
+    },
+    settingIMG() {
+      return localStorage.getItem('settingIMG');
+    },
+    settingListConfig() {
+      const _json = localStorage.getItem('settingListConfig');
+      if (_json !== undefined && _json !== null) {
+        return JSON.parse(_json)
+      } else {
+        return []
+      }
     }
   },
+  mounted() {
+    if (this.settingIMG !== undefined && this.settingIMG !== null && this.settingIMG !== '') {
+      this.convert_img_setting = this.settingIMG;
+    } else {
+      this.loadConfig(true, false)
+    }
+    if (this.settingListConfig !== undefined && this.settingListConfig !== null && this.settingListConfig !== '') {
+      this.listConfig = this.settingListConfig;
+    } else {
+      this.loadConfig(false, true)
+    }
+  },
+  created() {
+    this.loadConfig(true, true)
+  },
   methods: {
+    saveDocumentRule() {
+      this.dialog = true
+      this.teksLoading = 'Save Configuration Rules Document ' + this.seletConfig
+      var formData = new FormData();
+      formData.append('filename', this.seletConfig);
+      formData.append('json', this.document_setting);
+      axios.post('api/config', formData).then(res => {
+        if (res.data.status) {
+          this.document_setting = JSON.stringify(res.data.data, undefined, 2)
+          this.dialogDocument = false
+          this.dialog = true
+        } else {
+          this.dialogResult = {
+            value: true,
+            title: 'Error',
+            message: res.data.message,
+            color: '#F44336'
+          }
+          this.dialogDocument = false
+          this.dialog = true
+        }
+      });
+    },
+    saveConfigImg() {
+      this.dialog = true
+      this.teksLoading = 'Save Configuration Convert Image'
+      var formData = new FormData();
+      formData.append('json', this.convert_img_setting);
+      axios.post('api/config_convert', formData).then(res => {
+        if (res.data.status) {
+          this.document_setting = JSON.stringify(res.data.data, undefined, 2)
+          this.loadConfig(true, false)
+          this.dialogSetting = false
+          this.dialog = true
+        } else {
+          this.dialogResult = {
+            value: true,
+            title: 'Error',
+            message: res.data.message,
+            color: '#F44336'
+          }
+          this.dialog = true
+          this.dialogSetting = false
+        }
+      });
+    },
+    getConfigFile(file) {
+      this.seletConfig = file
+      axios.get('api/config?filename='+ file).then(res => {
+        this.document_setting = JSON.stringify(res.data.data, undefined, 2)
+        this.dialogDocument = true
+        });
+    },
+    loadConfig(img = false, doc = false) {
+      if (img) {
+        
+      this.dialog = true
+      this.teksLoading = 'Load configuration file'
+        axios.get('api/config_convert').then(res => {
+          localStorage.setItem('settingIMG', JSON.stringify(res.data.data, undefined, 2))
+          this.convert_img_setting = this.settingIMG
+          this.dialog = false
+        });
+      }
+      if (doc) {
+        this.dialog = true
+      this.teksLoading = 'Load configuration Rules Document'
+        axios.get('api/config_file').then(res => {
+          localStorage.setItem('settingListConfig', JSON.stringify(res.data.data, undefined, 2))
+          this.listConfig = this.settingDocument
+          this.dialog = false
+        });
+      }
+    },
     reset(files = true) {
       this.$store.commit('setLogFile',null)
       this.$store.commit('setResult', {
@@ -202,7 +425,7 @@ const bodyCmp = {
       this.$store.commit('setLoading', true);
       var formData = new FormData();
        formData.append('files', this.files);
-      axios.post('https://oleo-ocr.app-kita.net/api/upload', formData, {
+      axios.post('api/upload', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
@@ -238,7 +461,7 @@ const bodyCmp = {
        this.teksLoading = 'Convert PDF File to Image'
       var formData = new FormData();
        formData.append('files', file);
-      axios.post('https://oleo-ocr.app-kita.net/api/convert_to_img', formData).then(res => {
+      axios.post('api/convert_to_img', formData).then(res => {
         const data = res.data
         if (data.status) {
           this.$store.commit('setResult_toImg', res.data.data)
@@ -276,7 +499,7 @@ const bodyCmp = {
           formData.append('files[]', file[i]);
       }
       this.teksLoading = 'Convert Image to Text and initialitation document'
-      axios.post('https://oleo-ocr.app-kita.net/api/convert_to_text', formData).then(res => {
+      axios.post('api/convert_to_text', formData).then(res => {
         const data = res.data
         if (data.status) {
           this.$store.commit('setLoading', false);
@@ -320,7 +543,7 @@ const bodyCmp = {
       var formData = new FormData();
       formData.append('filename', this.logFiles);
       this.teksLoading = 'Callculate log file'
-      axios.post('https://oleo-ocr.app-kita.net/api/calculate_again', formData).then(res => {
+      axios.post('api/calculate_again', formData).then(res => {
         const data = res.data
         if (data.status) {
           this.$store.commit('setLoading', false);

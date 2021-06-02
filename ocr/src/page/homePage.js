@@ -12,7 +12,7 @@ const homePage = {
                         <v-list-item-action>
 <v-chip
       class="ma-2"
-      color="orange"
+      :color="getColorbyTtl(item.data.page.length)"
       label
       outlined
     >
@@ -47,7 +47,7 @@ const homePage = {
     <v-carousel-item style="height: 100%"
       v-for="(itm, i) in listGambar"
     ><center>
-    <v-img :src="'https://oleo-ocr.app-kita.net/' + itm" contain max-width="400" style="height: 100%"></v-img>
+    <v-img :src="itm" contain max-width="400" style="height: 100%"></v-img>
     </center>
     </v-carousel-item>
   </v-carousel>
@@ -69,8 +69,17 @@ const homePage = {
         carolusel: 0,
         listGambar: []
     }),
-    methods: {
-        showGambar(item, length) {
+  methods: {
+    getColorbyTtl(i) {
+      if (i == 1) {
+        return 'info'
+      } else if (i > 1) {
+        return 'green'
+      } else {
+        return 'red'
+      }
+    },
+    showGambar(item, length) {
             if (length > 0) {
                 this.listGambar = item.data.file
                 this.dialog = true
