@@ -1,28 +1,84 @@
 {
-        "label": "Sertifikat Asuransi (Insurance)",
-        "formula": "",
-        "rules":[
-            {
-                "first": "",
-                "single": "",
-                "multi_or": [],
-                "multi_and": ["CERTIFICATE OF ANALYSIS", "PARAMETER", "METHODS"],
-                "formula": "[multi_and] > -1 ? true : false",
-                "options": {
-                    "lower": false,
-                    "replace": false,
-                    "space": true,
-                    "multi_or": {
-                        "lower": true,
-                        "replace": true,
-                        "space": true
-                    },
-                    "multi_and": {
-                        "lower": false,
-                        "replace": false,
-                        "space": false
-                    }
-                }
-            }
-        ]
+  "label": "Sertifikat Asuransi (Insurance)",
+  "formula": "([1] == true || [2] == true || [3] == true)",
+  "rules": [
+    {
+      "first": "",
+      "single": "",
+      "multi_or": [],
+      "multi_and": [
+        "CERTIFICATE OF ANALYSIS",
+        "PARAMETER",
+        "METHODS"
+      ],
+      "formula": "[multi_and] > -1 ? true : false",
+      "options": {
+        "lower": false,
+        "replace": false,
+        "space": true,
+        "multi_or": {
+          "lower": true,
+          "replace": true,
+          "space": true
+        },
+        "multi_and": {
+          "lower": false,
+          "replace": false,
+          "space": false
+        }
+      }
+    },
+ {
+      "first": "",
+      "single": "",
+      "multi_or": [],
+      "multi_and": [
+        "Marine Cargo",
+        "Open Policy",
+        "Supervey Agent"
+      ],
+      "formula": "[multi_and] > -1 ? true : false",
+      "options": {
+        "lower": false,
+        "replace": false,
+        "space": true,
+        "multi_or": {
+          "lower": true,
+          "replace": true,
+          "space": true
+        },
+        "multi_and": {
+          "lower": false,
+          "replace": false,
+          "space": false
+        }
+      }
+    },
+ {
+      "first": "",
+      "single": "",
+      "multi_or": [],
+      "multi_and": [
+        "Certificate Number",
+        "Open Policy number",
+        "certificate of insurance"
+      ],
+      "formula": "[multi_and] > -1 ? true : false",
+      "options": {
+        "lower": false,
+        "replace": false,
+        "space": true,
+        "multi_or": {
+          "lower": true,
+          "replace": true,
+          "space": true
+        },
+        "multi_and": {
+          "lower": false,
+          "replace": false,
+          "space": false
+        }
+      }
+    }
+  ]
 }

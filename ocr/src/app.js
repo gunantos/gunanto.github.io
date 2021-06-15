@@ -1,6 +1,7 @@
 "use strict";
 const homePage = () => import(BASE_URL + "/src/page/homePage.js");
-
+const JsonEditor = () => import(BASE_URL+"/src/vue-json-edit.js");
+Vue.use(JsonEditor)
 Vue.use(Vuex)
 Vue.use(VueRouter)
 const store = new Vuex.Store({
@@ -99,6 +100,7 @@ var router = new VueRouter({
     routes: routes,
 
 })
+const BASE_URL_API = 'http://dev.app-kita.net/'
 const bodyCmp = () => import(BASE_URL + '/src/component/container.js')
 const APP = new Vue({
     router: router,
@@ -108,5 +110,6 @@ const APP = new Vue({
         'home-page': homePage,
         'body-cmp': bodyCmp
     },
+     JsonEditor,
     vuetify: new Vuetify()
 }).$mount('#app')

@@ -56,7 +56,7 @@ _loadall([
     'https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js',
     'https://cdn.jsdelivr.net/npm/vue-router@3.5.1/dist/vue-router.min.js',
     'https://cdn.jsdelivr.net/npm/vuex@3.6.2/dist/vuex.min.js',
-    'https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js',
+    'https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js'
 ], true);
 
 function showBody() {
