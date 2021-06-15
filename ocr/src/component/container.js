@@ -1,5 +1,7 @@
 
 const homePage = () => import(BASE_URL + "/src/page/homePage.js");
+
+const BASE_URL_API = 'http://dev.app-kita.net/'
 const bodyCmp = {
   template: `    <v-app id="inspire">
   <v-app-bar

@@ -100,7 +100,6 @@ var router = new VueRouter({
     routes: routes,
 
 })
-const BASE_URL_API = 'http://dev.app-kita.net/'
 const bodyCmp = () => import(BASE_URL + '/src/component/container.js')
 const APP = new Vue({
     router: router,
