@@ -1,6 +1,7 @@
 "use strict";
 const homePage = () => import(BASE_URL + "/src/page/homePage.js");
-
+const JsonEditor = () => import(BASE_URL+"/src/vue-json-edit.js");
+Vue.use(JsonEditor)
 Vue.use(Vuex)
 Vue.use(VueRouter)
 const store = new Vuex.Store({
@@ -64,23 +65,27 @@ const store = new Vuex.Store({
             }
             return 0
         },
-        getCountPageDetect(state) {
+        pageList(state) {
+            return state.result.convert_img
+        },
+        pageDetect(state) {
             const h = state.hasil
-            var ttl = 0
+            var hasil = []
             if (typeof h == 'array' || typeof h == 'object')
             {
                 h.forEach(el => { 
-            console.log(el)
                     if (el.data !== undefined) {
                         if (el.data.page !== undefined) {
                             if (typeof el.data.page == 'array' || typeof el.data.page == 'object') {
-                                ttl += el.data.page.length
+                                el.data.page.forEach(element => {
+                                    hasil.push(element)    
+                                });
                             }
                         }
                     }
                 })
             }
-            return ttl
+            return hasil
         }
     }
 })
@@ -108,5 +113,6 @@ const APP = new Vue({
         'home-page': homePage,
         'body-cmp': bodyCmp
     },
+     JsonEditor,
     vuetify: new Vuetify()
 }).$mount('#app')

@@ -1,9 +1,1 @@
-{
-  "format": "png",
-  "resolution": {
-    "x": 300,
-    "y": 300
-  },
-  "compress": true,
-  "compress_quality": 100
-}
+{"convert":"ghostscript","method":"library","dpi":200,"quality":100}
