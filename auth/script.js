@@ -51,7 +51,7 @@ function changelanguage(type = 'en') {
     lbl_email.html(lang.email)
     lbl_telp.html(lang.telp)
     lbl_pass.html(lang.password)
-    lbl_confpass.html(lang.password)
+    lbl_confpass.html(lang.confpass)
     code_telp.attr({ disabled: false })
     code_telp.val(lang.code)
     code_telp.attr({ disabled: true })
