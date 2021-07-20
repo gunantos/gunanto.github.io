@@ -9,7 +9,7 @@ const lng_indo = {
     telp: 'Telp',
     password: 'Sandi',
     confpass: 'Ulangi Sandi',
-    code: '+62',
+    code: '62',
     flag: 'flag-icon-id'
 }
 const lng_eng = {
@@ -20,7 +20,7 @@ const lng_eng = {
    telp: 'Telp',
    password: 'Password',
     confpass: 'Conf. Password',
-    code: '+44',
+    code: '44',
    flag: 'flag-icon-gb'
 }
 const default_language = navigator.language;
