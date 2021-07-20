@@ -9,7 +9,8 @@ const lng_indo = {
     telp: 'Telp',
     password: 'Sandi',
     confpass: 'Ulangi Sandi',
-    code: '+62'
+    code: '+62',
+    flag: 'flag-icon-id'
 }
 const lng_eng = {
    register: 'Register',
@@ -19,7 +20,8 @@ const lng_eng = {
    telp: 'Telp',
    password: 'Password',
     confpass: 'Conf. Password',
-   code: '+44'
+    code: '+44',
+   flag: 'flag-icon-gb'
 }
 const default_language = navigator.language;
 const lbl_register = $('#lbl-register');
@@ -37,11 +39,11 @@ const f_telp = $('#telp');
 const f_pass = $('#password');
 const code_telp = $('#code-telp');
 const f_confpass = $('#confpass');
+const f_flag = $('#flag');
 
 function changelanguage(type = 'en') {
     var lang = lng_eng
     type = type.toLowerCase();
-    console.log(type)
     if (type == 'id' || type == 'id-ID') {
         lang = lng_indo
     }
@@ -52,18 +54,50 @@ function changelanguage(type = 'en') {
     lbl_telp.html(lang.telp)
     lbl_pass.html(lang.password)
     lbl_confpass.html(lang.confpass)
+    
+    btn_register.html(lang.register)
+
+}
+
+function changeTelp(type='en') {
+    var lang = lng_eng
+    type = type.toLowerCase();
+    if (type == 'id' || type == 'id-ID') {
+        lang = lng_indo
+    }
     code_telp.attr({ disabled: false })
     code_telp.val(lang.code)
     code_telp.attr({ disabled: true })
-    btn_register.html(lang.register)
+    
+    f_flag.removeClass('flag-icon-id')
+    f_flag.removeClass('flag-icon-gb')
+    f_flag.addClass(lang.flag)
 }
 
     f_contry.change(function () {
         changelanguage(f_contry.val())
     })
+
+    function getLocation() {
+    return new Promise((reslove, reject) => {
+        $.get('https://www.cloudflare.com/cdn-cgi/trace', function (data) {
+            data = data.trim().split('\n').reduce(function(obj, pair) {
+                pair = pair.split('=');
+                return obj[pair[0]] = pair[1], obj;
+            }, {});
+            console.log(data.loc)
+            if (data.loc) {
+                changeTelp(data.loc.toLowerCase())
+            }
+        })
+    })
+}
+
 $(document).ready(function () {
     if (default_language == 'id' || default_language == 'id-ID') {
         f_contry.children('[value="id"]').prop("selected", true)
     }
+    getLocation()
     changelanguage(f_contry.val())
+    
 })
