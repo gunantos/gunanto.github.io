@@ -21,7 +21,7 @@ const lng_eng = {
     confpass: 'Conf. Password',
    code: '+44'
 }
-
+const default_language = navigator.language;
 const lbl_register = $('#lbl-register');
 const lbl_contry = $('#lbl-contry');
 const lbl_fullname = $('#lbl-fullname');
@@ -40,11 +40,11 @@ const f_confpass = $('#confpass');
 
 function changelanguage(type = 'en') {
     var lang = lng_eng
-    if (type == 'id') {
-        console.log('test')
+    type = type.toLowerCase();
+    console.log(type)
+    if (type == 'id' || type == 'id-ID') {
         lang = lng_indo
     }
-    console.log(type)
     lbl_register.html(lang.register)
     lbl_contry.html(lang.contry)
     lbl_fullname.html(lang.fullname)
@@ -62,5 +62,8 @@ function changelanguage(type = 'en') {
         changelanguage(f_contry.val())
     })
 $(document).ready(function () {
+    if (default_language == 'id' || default_language == 'id-ID') {
+        f_contry.children('[value="id"]').prop("selected", true)
+    }
     changelanguage(f_contry.val())
 })
